@@ -1,0 +1,58 @@
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+public class Main {
+
+	static int[] arr;
+	static int[] arr2;
+	public static long Solve(int start, int end){
+		if(start == end){
+			return 0;
+		}
+		int mid = (start + end)/2;
+		long count = 0;
+		count += Solve(start, mid);
+		count += Solve(mid + 1, end);
+		int j = start;
+		int k = mid + 1;
+		for(int i = start; i <= end;i++){
+			if(k > end){
+				arr[i] = arr2[j++];
+			}
+			else if(j <= mid && arr2[j] <= arr2[k]){
+				arr[i] = arr2[j++];
+			}
+			else{
+				arr[i] = arr2[k++];
+				count += mid - j + 1; 
+			}
+		}
+		for(int i = start; i<= end;i++){
+			arr2[i] = arr[i];
+		}
+		return count;
+		
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Scanner scan = new Scanner(System.in);
+		int n = scan.nextInt();
+		arr = new int[n];
+		arr2 = new int[n];
+		for(int i = 0; i < n;i ++){
+			arr[i] = scan.nextInt();
+			arr2[i] = arr[i];
+		}
+		long ans =  Solve(0,n-1) + n;
+		double ans2 = ((double)ans)/n;
+		ans2*=100;
+		ans2 += 0.5;
+		ans = (int)(ans2);
+		ans2 = ans/100.0;
+		DecimalFormat format = new DecimalFormat(".00");
+		System.out.println(format.format(ans2));
+		
+	}
+
+}
