@@ -1,0 +1,139 @@
+import java.io.BufferedReader;
+	import java.io.IOException;
+	import java.io.InputStreamReader;
+	import java.util.ArrayList;
+	import java.util.Stack;
+	
+	
+	public class Main {
+	
+		static Stack<Robot> st;
+		static Robot[] robots;
+		static boolean[] visited;
+		static long[][][] dp;
+		static int w;
+		static int mod= (int) (7 + Math.pow(10, 9));
+		public static void dfs(int i, boolean first){
+			if(visited[i] == true)
+				return;
+			visited[i] = true;
+				dp[i][1][0] = 1;
+				if(w > 0){
+					dp[i][0][1] = 1;
+				}
+			for(int j = 0; j < robots[i].accuse.size(); j++){
+				long[][] newarr = new long[2][w + 1];
+				Accuse a = robots[i].accuse.get(j);
+				dfs(a.to, false);
+				for(int k = w;k >= 0; k--){
+					for(int l = 0; l <= k;l++){
+						long multiplier = (dp[a.to][1][l] + dp[a.to][0][l])%mod;
+						newarr[1][k] += (multiplier*dp[i][1][k-l])%mod;
+	//					if(k == 0 && newarr[1][j] > 1){
+	//						System.out.println(" a");
+	//					}
+					}
+			//			System.out.println(dp[i][1][k]);
+				}
+				if(a.type == 0){
+					for(int k = w; k >= 0;k--)
+					{
+						for(int l = 0; l <=k;l++)
+							newarr[0][k] += (dp[i][0][k-l]*(dp[a.to][1][l]))%mod;
+					}
+				}
+				else{
+					for(int k = w; k >= 0; k--)
+					{
+						for(int l = 0; l <=k;l++)
+							newarr[0][k] += (dp[i][0][k-l]*(dp[a.to][0][l]))%mod;
+					}
+				}
+				for(int g = 0; g <2;g++){
+					for(int h = 0; h < w + 1; h++){
+						dp[i][g][h] = (newarr[g][h])%mod;
+					}
+				}
+			}
+			
+			if(first)
+				st.add(robots[i]);
+			
+		}
+		/**
+		 * @param args
+		 * @throws IOException 
+		 */
+		public static void main(String[] args) throws IOException {
+			// TODO Auto-generated method stub
+	
+			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+			String[] in1 = in.readLine().split(" ");
+			int n = Integer.parseInt(in1[0]);
+			w = Integer.parseInt(in1[1]);
+			int m = Integer.parseInt(in1[2]);
+			robots = new Robot[n + 1];
+			for(int i = 1; i <= n; i++){
+				robots[i] = new Robot(i);
+			}
+			for(int i = 0; i < m;i++){
+				String[] in2 = in.readLine().split(" ");
+				int from = Integer.parseInt(in2[1]);
+				int to = Integer.parseInt(in2[2]);
+				if(in2[0].equals("D")){
+					Accuse a = new Accuse(1,from,to);
+					robots[from].accuse.add(a);
+				}
+				else{
+					Accuse a = new Accuse(0,from,to);
+					robots[from].accuse.add(a);
+				}
+				
+			}
+			st = new Stack<Robot>();
+			visited = new boolean[n + 1];
+			dp = new long[n + 1][2][w + 1];
+			for(int i = 1; i <= n;i++){
+				dfs(i,true);
+			}
+			long[] ans = new long[w + 1];
+	//		for(int i = 1; i <= n;i++){
+	//			System.out.println(dp[i][1][0]);
+	//		}
+			ans[0] = 1;
+			while(st.size() > 0){
+				Robot r = st.pop();
+				long[] newans = new long[w + 1];
+				for(int i = w; i >= 0;i--){
+					for(int j = 0; j <= i;j++){
+						newans[i] += ((dp[r.id][0][j] + dp[r.id][1][j])*ans[i - j])%mod;
+					}
+				}
+				for(int i = 0; i < w+ 1; i++){
+					ans[i] = newans[i]%mod;
+				}
+			}
+			System.out.print((ans[ans.length - 1])%mod);
+		}
+	
+	}
+	
+	class Robot{
+		int id;
+		ArrayList<Accuse> accuse;
+		public Robot(int id){
+			this.id = id;
+			accuse = new ArrayList<Accuse>();
+		}
+	}
+	
+	class Accuse{
+		int type;
+		int from;
+		int to;
+		public Accuse(int type, int from, int to){
+			this.type = type;
+			this.from = from;
+			this.to = to;
+		}
+	}
