@@ -1,0 +1,41 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+	public static long lcd(String a, String b){
+		for(int i = 0; i < Math.min(a.length(), b.length());i++){
+			if(a.charAt(i) != b.charAt(i)){
+				return i;
+			}
+		}
+		return Math.min(a.length(), b.length());
+		
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Scanner scan = new Scanner(System.in);
+		int n = scan.nextInt();
+		for(int i = 0; i < n; i++){
+			String s = scan.next();
+//			s.toLowerCase();
+			String[] str = new String[s.length()];
+			for(int j = 0; j < s.length();j++){
+				str[j] = s.substring(j);
+			}
+			Arrays.sort(str);
+			if(str.length > 0){
+			long count = 1 + str[0].length();
+			for(int j = 1; j < str.length;j++){
+				count += str[j].length() - lcd(str[j], str[j-1]);
+			}
+			System.out.println(count);
+			}
+			else{
+				System.out.println(1);
+			}
+		}
+	}
+
+}
