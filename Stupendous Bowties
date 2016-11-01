@@ -1,0 +1,84 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+
+		BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
+		long n = Long.parseLong(scan.readLine().split(" ")[0]);
+		Map<Long, Long> vertical = new HashMap<Long,Long>();
+		Map<Long,Long> horizontal = new HashMap<Long,Long>();
+		Map<Long, Long> vVisited = new HashMap<Long,Long>();
+		Map<Long,Long> hVisited = new HashMap<Long,Long>();
+		ArrayList<long[]> pts = new ArrayList<long[]>();
+		for(long i = 0; i < n; i++){
+			String[] in1 = scan.readLine().split(" ");
+			long x = Long.parseLong(in1[0]);
+			long y = Long.parseLong(in1[1]);
+			long[] add = new long[2];
+			add[0] = x;
+			add[1] = y;
+			if(vertical.get(x) == null){
+				vertical.put(x, (long) 0);
+			}
+			if(horizontal.get(y) == null){
+				horizontal.put(y, (long) 0);
+			}
+			if(vVisited.get(x) == null){
+				vVisited.put(x, (long) 0);
+			}
+			if(hVisited.get(y) == null){
+				hVisited.put(y, (long) 0);
+			}
+			vertical.put(x, vertical.get(x) + 1);
+			horizontal.put(y, horizontal.get(y) + 1);
+			pts.add(add);
+		}
+		
+		long count = 0;
+		Collections.sort(pts, new Comparator<long[]>(){
+
+			@Override
+			public int compare(long[] arg0, long[] arg1) {
+				// TODO Auto-generated method stub
+				if(arg0[0] < arg1[0]){
+					return -1;
+				}
+				if(arg0[0] == arg1[0]){
+					if(arg0[1] <= arg1[1]){
+						return -1;
+					}
+					else{
+						return 1;
+					}
+				}
+				return 1;
+			}
+			
+		});
+		for(int i = 0; i < n;i++){
+			long x = pts.get(i)[0];
+			long y = pts.get(i)[1];
+			long xs = vertical.get(x) - 1;
+			long ys = horizontal.get(y) - 1;
+			long xs2 = vVisited.get(x);
+			long ys2 = hVisited.get(y);
+			count += xs*ys*xs2*ys2;
+			vVisited.put(x, vVisited.get(x) + 1);
+			hVisited.put(y, hVisited.get(y) + 1);
+			vertical.put(x, vertical.get(x) - 1);
+			horizontal.put(y, horizontal.get(y) - 1);
+		}
+		System.out.println(count*2);
+		
+	}
+
+}
