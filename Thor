@@ -1,0 +1,52 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		String[] in1 = in.readLine().split(" ");
+		int n =  Integer.parseInt(in1[0]);
+		int q = Integer.parseInt(in1[1]);
+		int[] read = new int[n];
+		int[] store2 = new int[n];
+		int count = 0;
+		int count2 = 0;
+		int count3 = 0;
+		ArrayList<Integer> note = new ArrayList<Integer>(300000);
+		for(int i = 0; i < q; i++){
+			String[] next = in.readLine().split(" ");
+			int type = Integer.parseInt(next[0]);
+			int x = Integer.parseInt(next[1]);
+			if(type == 1){
+				x -= 1;
+				count++;
+				count2++;
+				read[x] += 1;
+				note.add(x);
+			}
+			else if(type == 2){
+				x -= 1;
+				count -= read[x];
+				read[x] = 0;
+				store2[x] = count2;
+			}
+			else{
+				for(int j = count3; j < x; j++){
+					if(j >= store2[note.get(j)]){
+						count--;
+						store2[note.get(j)] = j + 1;
+						read[note.get(j)] -= 1;
+					}
+				}
+				count3 = x;
+			}
+			System.out.println(count);
+		}
+	}
+
+}
