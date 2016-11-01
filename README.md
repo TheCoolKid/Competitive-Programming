@@ -3,5 +3,5 @@ These are the solutions to the problems on the following competitions or website
 Canadian Computing Competition and Canadian Computing Olympiad
 , Codeforces,
  Dmoj,
- PEG Judge,
+ PEG Judge, and
  IOI
