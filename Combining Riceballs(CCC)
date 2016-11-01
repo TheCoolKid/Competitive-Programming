@@ -1,0 +1,48 @@
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Scanner scan = new Scanner(System.in);
+		int n = scan.nextInt();
+		int[] rice = new int[n];
+		for(int i = 0; i < n; i++){
+			rice[i] = scan.nextInt();
+		}
+		int[][] combine = new int[n][n];
+		int max = 0;
+		for(int i = 0; i < n; i++)
+		{
+			combine[i][i] = rice[i];
+			max = Math.max(combine[i][i], max);
+		}
+		for(int i = 1; i < n;i++){
+			loop1:
+			for(int j = 0; j < n - i;j++){
+				for(int k = j; k < j + i;k++){
+					int count1 = combine[j][k];
+					int count2 = combine[k + 1][j + i];
+					if(count1 == count2 && count1 != 0){
+						combine[j][j + i] =  count1 + count2;
+						max = Math.max(combine[j][j+i], max);
+						continue loop1;
+					}
+					if(count1 != 0){
+						for(int l = k + 1; l < j + i;l++){
+							count2 = combine[l + 1][j + i];
+							if(count1 == count2 && combine[k + 1][l] != 0){
+								combine[j][j+i]= count1 + count2 + combine[k + 1][l];
+								max = Math.max(combine[j][j+i], max);
+								continue loop1;
+							}
+						}
+					}
+				}
+			}
+		}
+		System.out.println(max);
+	}
+
+}
