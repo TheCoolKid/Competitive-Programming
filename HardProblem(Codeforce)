@@ -1,0 +1,77 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class P3 {
+
+	public static String reverse(String s){
+		String s2 = "";
+		for(int i = s.length() - 1; i >= 0; i--){
+			s2 += s.charAt(i);
+		}
+		return s2;
+		
+	}
+	public static int compare(String a, String b){
+		if(a.length() < b.length() && b.indexOf(a) == 0){
+			return -1;
+		}
+		for(int i = 0; i < Math.min(a.length(), b.length()); i++){
+			if(a.charAt(i) != b.charAt(i)){
+				if(a.charAt(i) - b.charAt(i) < 0){
+					return -1;
+				}
+				return 1;
+			}
+		}
+		if(a.length() > b.length()){
+			return 1;
+		}
+		return 0;
+		
+	}
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		// TODO Auto-generated method stub
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(in.readLine());
+		long[] energy = new long[n];
+		String[] in1 = in.readLine().split(" ");
+		for(int i = 0; i < n; i++){
+			energy[i] = Long.parseLong(in1[i]);
+		}
+		String[][] store = new String[2][n];
+		for(int i = 0; i < n; i++){
+			String next = in.readLine();
+			store[0][i] = next;
+			store[1][i] = reverse(next);
+		}
+		long[][] dp = new long[2][n];
+		dp[1][0] = energy[0];
+		for(int i = 1; i < n; i++){
+			dp[0][i] = Long.MAX_VALUE;
+			dp[1][i] = Long.MAX_VALUE;
+			if(compare(store[0][i-1],store[0][i]) <= 0 && dp[0][i-1] != Long.MAX_VALUE){
+				dp[0][i] = Math.min(dp[0][i], dp[0][i-1]);
+			}
+			if(compare(store[0][i-1],store[1][i]) <= 0 && dp[0][i-1] != Long.MAX_VALUE){
+				dp[1][i] = Math.min(dp[1][i], dp[0][i-1] + energy[i]);
+			}
+			if(compare(store[1][i-1],store[0][i]) <= 0 && dp[1][i-1] != Long.MAX_VALUE){
+				dp[0][i] = Math.min(dp[0][i], dp[1][i-1]);
+			}
+			if(compare(store[1][i-1],store[1][i]) <= 0 && dp[1][i-1] != Long.MAX_VALUE){
+				dp[1][i] = Math.min(dp[1][i], dp[1][i-1] + energy[i]);
+			}
+		}
+		if(dp[0][n - 1] == Long.MAX_VALUE && dp[1][n-1] == Long.MAX_VALUE){
+			System.out.print(-1);
+		}
+		else{
+			System.out.print(Math.min(dp[0][n-1], dp[1][n-1]));
+		}
+		
+		
+	}
+
+}
