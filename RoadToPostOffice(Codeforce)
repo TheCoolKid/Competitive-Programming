@@ -1,0 +1,31 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		String[] in1 = in.readLine().split(" ");
+		long d = Long.parseLong(in1[0]);
+		long k = Long.parseLong(in1[1]);
+		long a = Long.parseLong(in1[2]);
+		long b = Long.parseLong(in1[3]);
+		long t = Long.parseLong(in1[4]);
+		long walk = b*k;
+		long car = k*a+ t;
+		if(d < k){
+			System.out.print(d*a);
+		}
+		else if(car < walk){
+				long fix = d/k - 1;
+			System.out.print(fix*k*a + fix*t+Math.min(d- fix*k, k)*a + Math.min((d - fix*k - Math.min(d- fix*k, k))*a + t, (d - fix*k - Math.min(d- fix*k, k))*b));
+		}
+		else{
+			System.out.print(b*(d-Math.min(k, d)) + a*Math.min(k, d));
+		}
+	}
+
+}
