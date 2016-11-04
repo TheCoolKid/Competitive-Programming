@@ -1,0 +1,39 @@
+//============================================================================
+// Name        : Triangle.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main() {
+	int n;
+	scanf("%d",&n);
+	int* dp = new int[1];
+	scanf("%d",&dp[0]);
+	int next = 2;
+	int storeMax = dp[0];
+	for(int i = 0; i< n - 1; i++){
+		int * newDp = new int[next];
+		next++;
+		for(int j = 0; j < next - 1; j++){
+			scanf("%d",&newDp[j]);
+			int toAdd = 0;
+			if(j > 0){
+				toAdd = dp[j - 1];
+			}
+			if(j < next - 2){
+				toAdd = max(toAdd,dp[j]);
+			}
+			newDp[j] += toAdd;
+			storeMax = max(newDp[j], storeMax);
+		}
+		dp = newDp;
+	}
+	printf("%d",storeMax);
+	return 0;
+}
