@@ -1,0 +1,50 @@
+//============================================================================
+// Name        : NumberOfWays.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	long long n;
+	scanf("%I64d",&n);
+	long long sum[n];
+	long long store[n];
+	long long total = 0;
+	for(int i = 0; i < n; i++){
+		long long next;
+		scanf("%I64d",&next);
+		store[i] = next;
+		total += next;
+	}
+	if(total%3 != 0){
+		printf("%d",0);
+	}
+	else{
+		long long count1 = 0;
+		for(int i = n -1; i >= 0; i--){
+			count1 += store[i];
+			sum[i] = 0;
+			if(count1 == total/3){
+				sum[i] = 1;
+			}
+			if(i < n-1){
+				sum[i] += sum[i + 1];
+			}
+		}
+		long long count = 0;
+		count1 = 0;
+		for(int i = 0; i <n - 2;i++){
+			count1 += store[i];
+			if(count1 == total/3){
+				count += sum[i + 2];
+			}
+		}
+		printf("%I64d",count);
+	}
+	return 0;
+}
