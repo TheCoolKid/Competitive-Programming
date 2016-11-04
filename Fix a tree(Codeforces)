@@ -1,0 +1,75 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+
+public class P4 {
+
+	static int count1 = 0;
+	static int count2 = 0;
+	static int change = -1;
+	public static void solve(int[] root, boolean[] visited, int i){
+		
+		HashSet<Integer> visited2 = new HashSet<Integer>();
+		while(true){
+			if(visited2.contains(i)){
+				count2++;
+				count1++;
+				root[i] = -1;
+				if(change == -1)
+					change = i;
+				return;
+			}
+			if(visited[i] == true){
+				return;
+			}
+			if(root[i] == i){
+				count1++;
+				change = i;
+				visited[i] = true;
+				root[i] = -1;
+				return;
+			}
+			visited2.add(i);
+			visited[i] = true;
+			i = root[i];
+		}
+	}
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		// TODO Auto-generated method stub
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(in.readLine());
+		int[] root = new int[n];
+		String[] in1 = in.readLine().split(" ");
+		for(int i = 0; i < n; i++){
+			int next = Integer.parseInt(in1[i]) - 1;
+			root[i] = next;
+		}
+		boolean[] visited = new boolean[n];
+		for(int i = 0; i < n; i++){
+			 if(visited[i] == false){
+				 solve(root,visited,i);
+			 }
+		}
+		if(count1 == count2){
+			System.out.println(count1);
+		}
+		else{
+			System.out.println(count1 - 1);
+		}
+		change++;
+		for(int i = 0; i < n; i++){
+			if(root[i] == -1){
+				System.out.print(change);
+			}
+			else{
+				System.out.print((root[i]+ 1));
+			}
+			if(i != n -1){
+				System.out.print(" ");
+			}
+		}
+	}
+
+}
