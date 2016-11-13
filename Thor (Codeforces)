@@ -1,0 +1,64 @@
+//============================================================================
+// Name        : Thor.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <queue>
+using namespace std;
+
+class Note{
+public:
+	int a;
+	int b;
+	Note(int a, int b){
+		this->a = a;
+		this->b = b;
+	}
+};
+int main() {
+	int n,q;
+	scanf("%d%d",&n,&q);
+	queue<Note*>* T3 = new queue<Note*>();
+	queue<Note*>** T2 = new queue<Note*>*[n];
+	for(int i = 0; i < n; i++){
+		T2[i] = new queue<Note*>();
+	}
+	int cur = 1;
+	int count = 0;
+	for(int i = 0 ; i < q; i++){
+		int type, x;
+		scanf("%d%d",&type,&x);
+		x--;
+		if(type == 1){
+			Note* toAdd = new Note(x,cur);
+			cur++;
+			T3->push(toAdd);
+			T2[x]->push(toAdd);
+			count++;
+		}
+		else if(type == 2){
+			while(T2[x]->size() > 0){
+				count--;
+				T2[x]->pop();
+			}
+		}
+		else{
+			x++;
+			while(T3->size() > 0 && T3->front()->b <= x){
+				if(T2[T3->front()->a]->size() > 0 && T2[T3->front()->a]->front()->b == T3->front()->b){
+					T2[T3->front()->a]->pop();
+					count--;
+				}
+				T3->pop();
+			}
+		}
+		printf("%d\n",count);
+	}
+	return 0;
+}
